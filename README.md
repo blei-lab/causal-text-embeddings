@@ -72,3 +72,7 @@ To use a pre-trained BERT, uncomment the `INIT_DIR` options in `run_classifier.s
 1. First, get the data following instructions above and save it as `dat/reddit/2018.json`
 2. Run data pre-processing with `python -m reddit.data_cleaning.process_reddit`
 3. Once the data is processed, instructions for running the experiments are essentially the same as for PeerRead
+
+# Maintainers
+Dhanya Sridhar (`github.com/dsridhar91`) and Victor Veitch (`github.com/vveitch`)
+
