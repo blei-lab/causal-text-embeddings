@@ -1,0 +1,108 @@
+```/*
+based on https://www.reddit.com/r/bigquery/comments/4f2yp7/best_way_to_look_at_conversation_chains_in_reddit/
+and on https://nbviewer.jupyter.org/github/bburky/subredditgenderratios/blob/master/Subreddit%20Gender%20Ratios.ipynb
+
+KNOWN LIMITATIONS:
+does not look for male/female (zodiac?) symbols.
+I didn't do a fresh search over subreddits w/ gender, so some may be missing
+up/downs was mostly null, so I omitted this field
+*/
+
+WITH
+reddit_comments AS (
+SELECT
+  body, author, author_flair_text, created_utc, link_id, parent_id, score, controversiality, gilded, id, subreddit, author_flair_css_class
+FROM
+  `fh-bigquery.reddit_comments.2018*`
+--  `reddit-gender.comment_response_tuples.gendered_2018`
+),
+replies AS (
+SELECT
+  REGEXP_EXTRACT(parent_id, r'[a-zA-Z0-9]+$') as parent_id,
+--  MIN(subreddit) AS subreddit,
+  ARRAY_AGG(STRUCT(body, author, created_utc, id) ORDER BY created_utc ASC) AS reply
+FROM
+  reddit_comments
+WHERE
+  --parent id starting w t1_ indicates not-top-level comment
+  REGEXP_CONTAINS(parent_id, r'^(t1_)')
+GROUP BY
+  parent_id
+),
+ops AS (
+SELECT
+    gender, body, author, author_flair_text, created_utc, link_id, score, controversiality, gilded, id, subreddit, author_flair_css_class
+FROM
+(
+  -- male/female
+  SELECT
+    *,
+    REGEXP_EXTRACT(
+      LOWER(author_flair_css_class),
+      '(?:fe)?male') AS gender
+  FROM
+    reddit_comments
+  WHERE
+    subreddit IN (
+      'AskMen',
+      'AskWomen',
+      'AskMenOver30',
+      'AskWomenOver30',
+      'sexover30')
+  UNION ALL
+  -- pink/blue
+  SELECT
+    *,
+    CASE
+      WHEN author_flair_css_class = 'blue' THEN 'male'
+      WHEN author_flair_css_class = 'pink' THEN 'female'
+    END AS gender
+  FROM
+    reddit_comments
+  WHERE
+    subreddit IN (
+      'tall',
+      'short')
+  UNION ALL
+  -- A/S/L
+  SELECT
+  -- need to do this one manually because of asl
+      body, author, author_flair_text, created_utc, link_id, parent_id, score, controversiality, gilded, id, subreddit, author_flair_css_class,
+    CASE
+      WHEN asl = 'm' THEN 'male'
+      WHEN asl = 'f' THEN 'female'
+    END AS gender
+  FROM (
+    SELECT
+      *,
+      REGEXP_EXTRACT(
+        LOWER(author_flair_text),
+        "(?:^|[^\\p{L}0-9'\\.\\$])\\s*(?:\\d\\d)?\\s*(f|m)\\s*(?:\\d\\d)?\\s*(?:$|[^\\p{L}0-9'\\.])") AS asl
+    FROM
+      reddit_comments
+    WHERE
+      subreddit IN (
+        'OkCupid',
+        'keto',
+        'childfree',
+        'xxketo',
+        'LGBTeens',
+        'loseit',
+        'Tinder',
+        'proED',
+        'fatlogic',
+        'financialindependence',
+        'infj',
+        'infertility',
+        '100DaysofKeto')) )
+WHERE
+  gender IS NOT NULL AND
+    --parent id starting w t3_ indicates top-level comment
+  REGEXP_CONTAINS(parent_id, r'^(t3_)')
+)
+
+SELECT
+  ops.*,
+  replies.*
+FROM
+  ops INNER JOIN replies ON ops.id = replies.parent_id```

@@ -1,0 +1,4 @@
+Chunks of google's Bert code, https://github.com/google-research/bert
+
+pre-trained presumed to be in:
+'../../bert/pre-trained/uncased_L-12_H-768_A-12'
