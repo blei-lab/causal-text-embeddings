@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains software and data for "Using Text Embeddings for Causal Inference" (`arxiv:TBD`).
+This repository contains software and data for "Using Text Embeddings for Causal Inference" (`arxiv.org/abs/1905.12741`).
 The paper describes a method for causal inference with text documents. For example, does adding a
 theorem to a paper affect its chance of acceptance? The method adapts deep language models to address the causal problem. 
 
