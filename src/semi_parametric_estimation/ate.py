@@ -34,7 +34,8 @@ def psi_tmle_bin_outcome(q_t0, q_t1, g, t, y, truncate_level=0.05):
         return _perturbed_model_bin_outcome(q_t0, q_t1, g, t_cf, eps_hat)
 
     ite = q1(np.ones_like(t)) - q1(np.zeros_like(t))
-    return np.mean(ite)
+
+    return np.mean(ite), np.std(ite) / np.sqrt(t.shape[0])
 
 
 def psi_tmle_cont_outcome(q_t0, q_t1, g, t, y, eps_hat=None, truncate_level=0.05):
@@ -69,8 +70,10 @@ def psi_tmle_cont_outcome(q_t0, q_t1, g, t, y, eps_hat=None, truncate_level=0.05
 
 
 def psi_iptw(q_t0, q_t1, g, t, y, truncate_level=0.05):
+    q_t0, q_t1, g, t, y = truncate_all_by_g(q_t0, q_t1, g, t, y, truncate_level)
+
     ite=(t / g - (1-t) / (1-g))*y
-    return np.mean(truncate_by_g(ite, g, level=truncate_level))
+    return np.mean(ite), np.std(ite) / np.sqrt(t.shape[0])
 
 
 def psi_aiptw(q_t0, q_t1, g, t, y, truncate_level=0.05):
@@ -80,16 +83,19 @@ def psi_aiptw(q_t0, q_t1, g, t, y, truncate_level=0.05):
     h = t * (1.0 / g) - (1.0 - t) / (1.0 - g)
     ite = h * (y - full_q) + q_t1 - q_t0
 
-    return np.mean(ite)
+    return np.mean(ite), np.std(ite) / np.sqrt(t.shape[0])
 
 
 def psi_q_only(q_t0, q_t1, g, t, y, truncate_level=0.):
+    q_t0, q_t1, g, t, y = truncate_all_by_g(q_t0, q_t1, g, t, y, truncate_level)
     ite = (q_t1 - q_t0)
-    return np.mean(truncate_by_g(ite, g, level=truncate_level))
+    return np.mean(ite), np.std(ite) / np.sqrt(t.shape[0])
 
 
 def psi_very_naive(t, y):
-    return y[t == 1].mean() - y[t == 0].mean()
+    psi_hat = y[t == 1].mean() - y[t == 0].mean()
+    psi_std = np.sqrt(np.var(y[t == 1]) / np.sum(t) + np.var(y[t == 0]) / np.sum(1-t))
+    return
 
 
 def ates_from_atts(q_t0, q_t1, g, t, y, truncate_level=0.05):
@@ -125,7 +131,7 @@ def ate_estimates(q_t0, q_t1, g, t, y, truncate_level=0.05):
     q_only = psi_q_only(q_t0, q_t1, g, t, y, truncate_level=truncate_level)
     iptw = psi_iptw(q_t0, q_t1, g, t, y, truncate_level=truncate_level)
     aiptw = psi_aiptw(q_t0, q_t1, g, t, y, truncate_level=truncate_level)
-    tmle = psi_tmle_cont_outcome(q_t0, q_t1, g, t, y, truncate_level=truncate_level)[0]
+    tmle = psi_tmle_cont_outcome(q_t0, q_t1, g, t, y, truncate_level=truncate_level)[0:1]
     bin_tmle = psi_tmle_bin_outcome(q_t0, q_t1, g, t, y, truncate_level=truncate_level)
 
     estimates = {'very_naive': very_naive,
