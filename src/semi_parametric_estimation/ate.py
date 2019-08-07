@@ -5,6 +5,13 @@ from scipy.optimize import minimize
 from .helpers import truncate_by_g, mse, cross_entropy, truncate_all_by_g
 from .att import att_estimates
 
+"""
+Note: the standard deviations reported by this methods are actually standard deviations conditioned on the nuisance
+parameters.
+
+That is, we do not account for variability in the estimation of Q and g
+"""
+
 
 def _perturbed_model_bin_outcome(q_t0, q_t1, g, t, eps):
     """
