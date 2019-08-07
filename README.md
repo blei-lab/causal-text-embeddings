@@ -1,12 +1,12 @@
 # Introduction
 
-This repository contains software and data for "Using Text Embeddings for Causal Inference" (`arxiv:TBD`).
+This repository contains software and data for "Using Text Embeddings for Causal Inference" ([arxiv.org/abs/1905.12741](https://arxiv.org/abs/1905.12741)).
 The paper describes a method for causal inference with text documents. For example, does adding a
 theorem to a paper affect its chance of acceptance? The method adapts deep language models to address the causal problem. 
 
 This software builds on
-1. Bert: `github.com/google-research/bert`, and on
-2. PeerRead: `github.com/allenai/PeerRead`
+1. Bert: [github.com/google-research/bert](https://github.com/google-research/bert), and on
+2. PeerRead: [github.com/allenai/PeerRead](https://github.com/allenai/PeerRead)
 
 We include pre-processed PeerRead arxiv data for convenience.
 
@@ -21,10 +21,10 @@ We include pre-processed PeerRead arxiv data for convenience.
 This data is a collection of arXiv papers submitted to computer science conferences, the accept/reject decisions for these papers,
 and their abstracts.
 The raw PeerRead data contains significantly more information.
-You can get the raw data by following instructions at `github.com/allenai/PeerRead`. 
+You can get the raw data by following instructions at [github.com/allenai/PeerRead](https://github.com/allenai/PeerRead). 
 Running the included pre-processing scripts in the PeerRead folder will recreate the included tfrecord file. 
 
-2. The reddit data can be downloaded at `archive.org/details/reddit_posts_2018`.
+2. The reddit data can be downloaded at [archive.org/details/reddit_posts_2018](https://archive.org/details/reddit_posts_2018).
 This data includes all top-level reddit comments where the gender of the poster was annotated in some fashion.
 Each post has meta information (score, date, username, etc.) and includes the text for the first reply.
 The processed data used in the paper can be recreated by running the pre-processing scripts in the `reddit` folder.
@@ -74,5 +74,5 @@ To use a pre-trained BERT, uncomment the `INIT_DIR` options in `run_classifier.s
 3. Once the data is processed, instructions for running the experiments are essentially the same as for PeerRead
 
 # Maintainers
-Dhanya Sridhar (`github.com/dsridhar91`) and Victor Veitch (`github.com/vveitch`)
+[Dhanya Sridhar](https://github.com/dsridhar91`) and [Victor Veitch](`github.com/vveitch`)
 
