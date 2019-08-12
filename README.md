@@ -55,9 +55,11 @@ The flag
 `--simulated=real`
 controls whether to use the real effect or one of the semi-synthetic modes.
 
-Finally, the effect estimates can be reproduced by running `python -m result_processing.compute_ate`.
+The effect estimates can be reproduced by running `python -m result_processing.compute_ate`.
 This takes in the predictions of the bert model (in tsv format) and passes them into downstream estimators
 of the causal effect.
+
+To reproduce the baselines, you'll need to produce a tsv for each simulated dataset you want to test on. To do this, you can run `python -m PeerRead.dataset.array_from_dataset` from src. The flag `--beta1=1.0` controls the strength of the confounding. (The other flags control other simulation parameters not used in the paper.)
 
 # Misc.
 
