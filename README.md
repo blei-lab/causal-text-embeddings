@@ -10,6 +10,8 @@ This software builds on
 
 We include pre-processed PeerRead arxiv data for convenience.
 
+You may find the (reference tensorflow 2 implementation)[https://github.com/vveitch/causal-text-embeddings-tf2] helpful.
+
 # Requirements and setup
 
 1. You'll need to download a pre-trained BERT model (following the above github link). We use `uncased_L-12_H-768_A-12`.
