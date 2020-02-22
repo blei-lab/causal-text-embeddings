@@ -11,7 +11,7 @@ This software builds on
 We include pre-processed PeerRead arxiv data for convenience.
 
 # Tensorflow 2
-For new projects, we recommend building on the [reference tensorflow 2 implementation](https://github.com/vveitch/causal-text-embeddings-tf2) helpful.
+For new projects, we recommend building on the [reference tensorflow 2 implementation](https://github.com/vveitch/causal-text-embeddings-tf2).
 
 # Requirements and setup
 
